@@ -76,6 +76,12 @@ class CartSerializer(serializers.ModelSerializer):
         model = Cart
         fields = '__all__'
 
+class AddedProductSerializer(serializers.Serializer):
+    product_name = serializers.CharField()
+    price = serializers.DecimalField(max_digits=10, decimal_places=2)
+    quantity_added = serializers.IntegerField()
+    total_price_for_product = serializers.DecimalField(max_digits=10, decimal_places=2)
+
 
 class OrderItemSerializer(serializers.ModelSerializer):
     product = ProductSerializer()

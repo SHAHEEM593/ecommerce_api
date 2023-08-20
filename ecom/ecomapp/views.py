@@ -218,36 +218,50 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAdminUser]
 
 
-#cart
+
+    
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def add_to_cart(request):
-    product_ids = request.data.get('product_ids', [])
+    product_data = request.data.get('products', [])
 
-    if not product_ids:
+    if not product_data:
         return Response({'error': 'No products provided.'}, status=status.HTTP_400_BAD_REQUEST)
 
     cart, created = Cart.objects.get_or_create(user=request.user)
+    total_price = 0
     added_products = []
 
-    for product_id in product_ids:
+    for product_info in product_data:
+        product_id = product_info.get('product_id')
+        quantity = product_info.get('quantity', 1) 
+
         try:
             product = Product.objects.get(pk=product_id)
             cart_item, item_created = CartItem.objects.get_or_create(cart=cart, product=product)
 
             if not item_created:
-                cart_item.quantity += 1
+                cart_item.quantity = quantity  
                 cart_item.save()
 
+            total_price_for_product = cart_item.product.price * cart_item.quantity
+            total_price += total_price_for_product
+
             added_products.append({
-                'product': ProductSerializer(product).data,
-                'cart_item': CartItemSerializer(cart_item).data
+                'product_name': product.name,
+                'price': cart_item.product.price,  
+                'quantity_added': quantity,
+                'total_price_for_product': total_price_for_product
             })
 
         except Product.DoesNotExist:
-            pass 
+            pass
 
-    return Response({'message': 'Products added to cart successfully.', 'added_products': added_products}, status=status.HTTP_200_OK)
+    return Response({
+        'message': 'Products added to cart successfully.',
+        'added_products': added_products,
+        'total_price': total_price
+    }, status=status.HTTP_200_OK)
 
 
 
@@ -291,7 +305,7 @@ def update_cart_item(request, cart_item_id):
     return Response({'cart_item': cart_item_serializer.data}, status=status.HTTP_200_OK)
 
 
-@api_view(['POST'])
+@api_view(['Delete'])
 @permission_classes([permissions.IsAuthenticated])
 def remove_cart_item(request, cart_item_id):
     try:
