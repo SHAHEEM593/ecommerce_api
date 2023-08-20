@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Order Status Update</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .email-header {
+            background-color: #007BFF;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+        .email-content {
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .email-message {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        .order-details {
+            margin-top: 20px;
+            border-top: 1px solid #cccccc;
+            padding: 20px;
+        }
+        .order-detail-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .order-detail-value {
+            margin-left: 10px;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #888888;
+        }
+        .footer a {
+            color: #888888;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            color: #007BFF;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-header">
+        <h2>Order Status Update</h2>
+    </div>
+    <div class="email-content">
+        <p class="email-message">Dear {{ order.user.username }},</p>
+        <p class="email-message">Your order with order number #{{ order.pk }} has been updated:</p>
+        <div class="order-details">
+            <p class="order-detail-label">Old Status:</p>
+            <p class="order-detail-value">{{ old_status }}</p>
+            <p class="order-detail-label">New Status:</p>
+            <p class="order-detail-value">{{ new_status }}</p>
+        </div>
+        <p class="email-message">Thank you for choosing our platform!</p>
+    </div>
+    <div class="footer">
+        © 2023 Your Company Name. All rights reserved. | <a href="https://www.example.com">Visit our website</a>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Order Placed Successfully</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .order-details {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .order-details th, .order-details td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        .order-details th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h2>Order Placed Successfully</h2>
+    <p>Dear {{ order.user.username }},</p>
+    <p>Your order has been successfully placed. Here are the details:</p>
+    <table class="order-details">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order.orderitem_set.all %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>${{ item.product.price }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p>Total Amount: ${{ order.total_amount }}</p>
+    <p>Thank you for shopping with us!</p>
+</body>
+</html>
